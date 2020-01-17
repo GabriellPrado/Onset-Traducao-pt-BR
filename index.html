@@ -1,0 +1,767 @@
+<!--/* Copyright (C) 2019 Blue Mountains GmbH. All Rights Reserved. */-->
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Blue Mountains GmbH">
+	<title>Onset</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script>
+	(function(obj)
+	{
+		ue.game = {};
+		ue.game.gameexec = function(name, ...args)
+		{
+			if (typeof name != "string") {
+				return;
+			}
+
+			if (args.length == 0) {
+				obj.gameexec(name, "")
+			}
+			else {
+				let params = []
+				for (let i = 0; i < args.length; i++) {
+					params[i] = args[i];
+				}
+				obj.gameexec(name, JSON.stringify(params));
+			}
+		};
+	})(ue.game);
+	GameExec = ue.game.gameexec;
+	</script>
+	
+	<link href="css/fa.min.css" rel="stylesheet">
+	<link href="styles.css" rel="stylesheet">
+	<link href="mbox.css" rel="stylesheet">
+	<link href="checkbox.css" rel="stylesheet">
+	<link href="dropdown.css" rel="stylesheet">
+	<link href="dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="bbcode/xbbcode.css" rel="stylesheet">
+</head>
+<body oncontextmenu="return false" class="body-bg">
+	<div class="pageWrapper">
+		<div id="globalMessageBox" class="mbox">
+			<div class="mbox-content">
+				<div class="row">
+					<div class="col-6">
+						<h2>INFO</h2>
+					</div>
+					<div class="col-6 text-right">
+						<span class="mbox-close">&times;</span>
+					</div>
+				</div>
+				<hr>
+				<p><span id="mbox-message">message</span><br></p>
+				<button class="btn btn-primary btn-lg btnsfx">⠀⠀⠀OK⠀⠀⠀</button>
+			</div>
+		</div>
+		
+		<div class="siteWrapperTopBottom" id="siteMain">
+			<div class="maincontent">
+				<main role="main" class="container-fluid px-0">
+					<div class="row" style="margin-left: 0px; margin-right: 0px;">
+						<div class="col-1" style="flex: 0 0 9%; max-width: 9%; vertical-align: middle; height: 6vh; line-height: 6vh;"><img style="max-width: 7vw;" src="img/OnsetLogo.png"></div>
+						<div class="col-8" style="flex: 0 0 58%; max-width: 58%;"></div>
+						<div data-menu="SERVERS" class="col-1 mainMenuSelect mainMenuServers topMenu barActive btnsfx" style="flex: 0 0 11%; max-width: 11%;"><i class="fas fa-server"></i> <span class="translated">servers</span></div>
+						<div data-menu="SETTINGS" class="col-1 mainMenuSelect mainMenuSettings topMenu btnsfx" style="flex: 0 0 11%; max-width: 11%;"><i class="fas fa-cog"></i> <span class="translated">settings</span></div>
+						<div data-menu="QUIT" id="mainMenuQuit" class="col-1 mainMenuSelect topMenu btnsfx" style="flex: 0 0 11%; max-width: 11%;"><i class="fas fa-times-circle"></i> <span class="translated">quit</span></div>
+					</div>
+				</main>
+			</div>
+		</div>
+		
+		<div class="siteWrapperTopBottom" id="siteIngameMain" style="display: none;">
+			<div class="maincontent">
+				<main role="main" class="container-fluid px-0">
+					<div class="row" style="margin-left: 0px; margin-right: 0px;">
+						<div class="col-1 topMenu" style="flex: 0 0 9%; max-width: 9%;"><img style="max-width: 7vw;" src="img/OnsetLogo.png"></div>
+						<div class="col-8" style="flex: 0 0 34%; max-width: 34%;"></div>
+						<div data-menu="CONTINUE" id="mainMenuServers" class="col-1 mainMenuSelect topMenu btnsfx" style="flex: 0 0 12%; max-width: 12%;"><i class="fas fa-forward"></i> <span class="translated">continue</span></div>
+						<div data-menu="DISCONNECT" id="mainMenuServers" class="col-1 mainMenuSelect topMenu btnsfx" style="flex: 0 0 12%; max-width: 12%;"><i class="fas fa-sign-out-alt"></i> <span class="translated">disconnect</span></div>
+						<div data-menu="SERVERS" class="col-1 mainMenuSelect mainMenuServers topMenu barActive btnsfx" style="flex: 0 0 11%; max-width: 11%;"><i class="fas fa-server"></i> <span class="translated">servers</span></div>
+						<div data-menu="SETTINGS" class="col-1 mainMenuSelect mainMenuSettings topMenu btnsfx" style="flex: 0 0 11%; max-width: 11%;"><i class="fas fa-cog"></i> <span class="translated">settings</span></div>
+						<div data-menu="QUIT" id="mainMenuQuit" class="col-1 mainMenuSelect topMenu btnsfx" style="flex: 0 0 11%; max-width: 11%;"><i class="fas fa-times-circle"></i> <span class="translated">quit</span></div>
+					</div>
+				</main>
+			</div>
+		</div>
+		
+		<div class="siteWrapper" id="siteServers">
+		
+			<div class="maincontent">
+				<main role="main" class="container-fluid px-0">
+
+					<div id="serverTopMenu" class="row" style="margin-left: 0px; margin-right: 0px;">
+						<div id="barInternet" class="col-2 topMenu tintBlack barActive btnsfx" style="flex: 0 0 13%; max-width: 13%;"><i class="fas fa-globe"></i> <span class="translated">internet</span></div>
+						<div id="barFavorites" class="col-2 topMenu tintBlack btnsfx" style="flex: 0 0 13%; max-width: 13%;"><i class="fas fa-star"></i> <span class="translated">favorites</span></div>
+						<div id="barHistory" class="col-2 topMenu tintBlack btnsfx" style="flex: 0 0 13%; max-width: 13%;"><i class="fas fa-history"></i> <span class="translated">history</span></div>
+						<div id="barDirect" class="col-2 topMenu tintBlack btnsfx" style="flex: 0 0 13%; max-width: 13%;"><i class="fas fa-directions"></i> <span class="translated">direct_connect</span></div>
+						<div class="col-4 tintBlack" style="flex: 0 0 48%; max-width: 48%;"></div>
+					</div>
+
+					<div id="tabInternet" style="max-height: 100%">
+						<div style="position: relative; width: 100%; height: 8vh;">
+						  <div class="row" style="margin-left: 0px; margin-right: 0px;">
+								<div class="col-1 tint">
+									<button type="submit" class="btn btn-success btn-lg btnsfx" id="refreshButton"><span class="translated">refresh_list</span></button>
+								</div>
+								<div class="col-3 tint">
+									<div class="input-group">
+									  <input id="filterHostname" type="text" class="form-control rounded-0 translated-placeholder" placeholder="filter_hostname">
+									</div>
+								</div>
+								<div class="col-5 tint">
+									<div id="serverFilters">
+									<label class="check-boxcontainer" style="display: inline-block"><span class="translated">hide_empty</span>
+									  <input type="checkbox" id="filterHideEmpty">
+									  <span class="checkmark"></span>
+									</label>
+									<label class="check-boxcontainer" style="display: inline-block; margin-left: 0.5vw;"><span class="translated">hide_full</span>
+									  <input type="checkbox" id="filterHideFull">
+									  <span class="checkmark"></span>
+									</label>
+									<label class="check-boxcontainer" style="display: inline-block; margin-left: 0.5vw;"><span class="translated">hide_password</span>
+									  <input type="checkbox" id="filterHidePassword">
+									  <span class="checkmark" ></span>
+									</label>
+									</div>
+								</div>
+								<div class="col-3 tint">
+									<p id="serverCount" class="text-right">
+										<span class="translated">servers</span>: 0
+									</p>
+								</div>
+						  </div>
+						</div>
+					</div>
+					<div id="tabFavorites" style="display: none;"></div>
+					<div id="tabHistory" style="display: none;"></div>
+					<div id="tabDirect" style="display: none;">
+						<div class="row">
+							<div class="col-1">
+							</div>
+							<div class="col-5">
+								<br><br>
+								<span style="font-size: 2.2vh;"><span class="translated">direct_connect_info</span></span>
+								<br><br>
+								<form id="connectForm">
+								  <div class="form-group">
+									<label for="inputAddress" style="font-size: 1.8vh;"><span class="translated">ip_address</span></label>
+									<input type="text" class="form-control rounded-0" id="inputAddress" aria-describedby="addressHelp" placeholder="localhost">
+									<small id="addressHelp" class="form-text text-muted"><span class="translated">example</span>: 127.0.0.1, 127.0.0.1:7777, localhost</small>
+								  </div>
+								  <div class="form-group">
+									<label for="inputPassword" style="font-size: 1.8vh;"><span class="translated">password</span></label>
+									<input type="text" class="form-control rounded-0 translated-placeholder" id="inputPassword" placeholder="leave_empty_not_required">
+								  </div>
+								  <button type="submit" class="btn btn-success btn-lg"><span class="translated">connect</span></button>
+								</form>
+							</div>
+							<div class="col-6"></div>
+						</div>
+					</div>
+				</main>
+			</div>
+		</div>
+		
+		<div class="siteWrapper" id="siteSettings" style="display: none;">
+			<div class="maincontent">
+				<main role="main" class="container-fluid px-0">
+					<div id="settingsTopMenu" class="row" style="margin-left: 0px; margin-right: 0px;">
+						<div id="barGame" class="col-1 topMenu tintBlack barActive btnsfx" style="flex: 0 0 13%; max-width: 13%;"><i class="fas fa-gamepad"></i> <span class="translated">game</span></div>
+						<div id="barVideo" class="col-1 topMenu tintBlack btnsfx" style="flex: 0 0 13%; max-width: 13%;"><i class="fas fa-desktop"></i> <span class="translated">video</span></div>
+						<div id="barControls" class="col-1 topMenu tintBlack btnsfx" style="flex: 0 0 13%; max-width: 13%;"><i class="fas fa-keyboard"></i> <span class="translated">controls</span></div>
+						<div class="col-9 tintBlack" style="flex: 0 0 39%; max-width: 39%;"></div>
+					</div>
+
+					<div id="settingsContainer">
+					<div style="position: relative; width: 100%; height: 3vh;"></div>
+
+					<div id="tabGame">
+					
+					<table>
+						<tbody>
+						<tr>
+							<td><span class="translated">show_fps</span></td>
+							<td>
+								<div id="settingShowFPS" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">on</span>
+									</label>
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">off</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">limit_fps</span></td>
+							<td>
+								<div class="input-group">
+									<input id="settingFrameRateLimit" type="number" class="form-control rounded-0" placeholder="" value="0">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">audio_volume</span></td>
+							<td>
+								<div class="slidecontainer">
+									<input id="settingAudioVolume" type="range" min="1" max="100" value="50" class="slider">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">audio_quality</span></td>
+							<td>
+								<div id="settingAudio" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">low</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">medium</span>
+									</label> 
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="2" autocomplete="off"> <span class="translated">high</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">mouse_sensitivity</span></td>
+							<td>
+								<div class="slidecontainer">
+									<input id="settingMouseSensitivity" type="range" min="1" max="200" value="100" class="slider">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">invert_mouse_y</span></td>
+							<td>
+								<div id="settingInvertMouseY" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">on</span>
+									</label>
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">off</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">mute_menu_music</span></td>
+							<td>
+								<div id="settingMuteMenuMusic" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">on</span>
+									</label>
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">off</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">voice_capture</span></td>
+							<td>
+								<div id="settingVoiceCapture" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">voice_activation</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">push_to_talk</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="2" autocomplete="off"> <span class="translated">off</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">voice_threshold</span></td>
+							<td>
+								<div class="slidecontainer">
+									<input id="settingVoiceThreshold" type="range" min="1" max="100" value="50" class="slider">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">language</span></td>
+							<td>
+								<div class="dropdown-container">
+									<div id="settingLanguage" class="dropdown">
+										<span>English</span>
+										<span>Português</span>
+										<span>French</span>
+										<span>German</span>
+										<span>Russian</span>
+										<span>Chinese (Traditional)</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+					<br>
+					<button type="submit" class="btn btn-success btn-lg"><span class="translated">apply_and_save</span></button>
+					</div>
+					
+					<div id="tabVideo" style="display: none;">					
+					<table>
+						<tbody>
+						<tr>
+							<td><span class="translated">resolution</span></td>
+							<td>
+								<div class="dropdown-container">
+								<div id="settingResolution" class="dropdown">
+								</div>
+								<div id="settingScreenMode" class="dropdown" style="padding-left: 0.5vw;">
+									<span><span class="translated">fullscreen</span></span>
+									<span><span class="translated">windowed_fullscreen</span></span>
+									<span><span class="translated">windowed</span></span>
+								</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>V-Sync</td>
+							<td>
+								<div id="settingVSYNC" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">on</span>
+									</label>
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">off</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">hdr_output</span></td>
+							<td>
+								<div id="settingHDR" class="btn-group btn-group-toggle" data-toggle="buttons" style="pointer-events: auto;">
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">on</span>
+									</label>
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">off</span>
+									</label>
+								</div>
+								<span id="settingHDRUnsupported" style="font-size: 65%; display: none;"><span class="translated">no_hdr_support</span></span>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">anti_aliasing</span></td>
+							<td>
+								<div id="settingAA" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">low</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">medium</span>
+									</label> 
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="2" autocomplete="off"> <span class="translated">high</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="3" autocomplete="off"> <span class="translated">epic</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="4" autocomplete="off"> <span class="translated">epic_squared</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">shadow_quality</span></td>
+							<td>
+								<div id="settingShadow" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">low</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">medium</span>
+									</label> 
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="2" autocomplete="off"> <span class="translated">high</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="3" autocomplete="off"> <span class="translated">epic</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="4" autocomplete="off"> <span class="translated">epic_squared</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">post_process</span></td>
+							<td>
+								<div id="settingPP" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">low</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">medium</span>
+									</label> 
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="2" autocomplete="off"> <span class="translated">high</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="3" autocomplete="off"> <span class="translated">epic</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="4" autocomplete="off"> <span class="translated">epic_squared</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">view_distance</span></td>
+							<td>
+								<div id="settingView" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">low</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">medium</span>
+									</label> 
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="2" autocomplete="off"> <span class="translated">high</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="3" autocomplete="off"> <span class="translated">epic</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="4" autocomplete="off"> <span class="translated">epic_squared</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">foliage_density</span></td>
+							<td>
+								<div id="settingFoliage" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">low</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">medium</span>
+									</label> 
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="2" autocomplete="off"> <span class="translated">high</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="3" autocomplete="off"> <span class="translated">epic</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="4" autocomplete="off"> <span class="translated">epic_squared</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">texture_quality</span></td>
+							<td>
+								<div id="settingTexture" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">low</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">medium</span>
+									</label> 
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="2" autocomplete="off"> <span class="translated">high</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="3" autocomplete="off"> <span class="translated">epic</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="4" autocomplete="off"> <span class="translated">epic_squared</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">visual_effects</span></td>
+							<td>
+								<div id="settingEffects" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">low</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">medium</span>
+									</label> 
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="2" autocomplete="off"> <span class="translated">high</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="3" autocomplete="off"> <span class="translated">epic</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="4" autocomplete="off"> <span class="translated">epic_squared</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">ambient_occlusion</span></td>
+							<td>
+								<div id="settingAO" class="btn-group btn-group-toggle" data-toggle="buttons">
+									<label class="btn btn-secondary active">
+										<input type="radio" name="options" data-opt="0" autocomplete="off"> <span class="translated">low</span>
+									</label>
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="1" autocomplete="off"> <span class="translated">medium</span>
+									</label> 
+									<label class="btn btn-secondary">
+										<input type="radio" name="options" data-opt="2" autocomplete="off"> <span class="translated">high</span>
+									</label>
+								</div>
+							</td>
+						</tr>
+						</tbody>
+					</table> 
+					<br>
+					<button type="submit" class="btn btn-success btn-lg"><span class="translated">apply_and_save</span></button>
+					</div>
+					
+					<div id="tabControls" style="display: none;">
+					<table style="max-height: 62vh; overflow-y: scroll; display: inline-block;">
+						<tbody>
+						<tr>
+							<td><span class="translated">forward</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="axis" data-original="W" data-key="MoveForward" data-scale="up">W</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">backward</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="axis" data-original="S" data-key="MoveForward" data-scale="down">S</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">move_left</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="axis" data-original="A" data-key="MoveRight" data-scale="down">A</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">move_right</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="axis" data-original="D" data-key="MoveRight" data-scale="up">D</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">jump</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="SpaceBar" data-key="Jump">SpaceBar</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">walk</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="LeftAlt" data-key="Walk">LeftAlt</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">sprint</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="LeftShift" data-key="Sprint">LeftShift</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">crouch</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="C" data-key="Crouch">C</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">open_close_parachute</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="SpaceBar" data-key="Parachute">SpaceBar</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">pointing</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="LeftControl" data-key="Pointing">LeftControl</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">reload</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="R" data-key="Reload">R</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">aim</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="RightMouseButton" data-key="Aim">RightMouseButton</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">shoot</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="LeftMouseButton" data-key="Shoot">LeftMouseButton</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">next_weapon</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="MouseScrollUp" data-key="SwitchWeaponUp">MouseScrollUp</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">previous_weapon</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="MouseScrollDown" data-key="SwitchWeaponDown">MouseScrollDown</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">weapon_menu</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="axis" data-original="Q" data-key="WeaponMenu" data-scale="up">Q</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">open_chat</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="T" data-key="Chat">T</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">push_to_talk</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="RightControl" data-key="VoiceActivation">RightControl</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">vehicle_throttle</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="axis" data-original="W" data-key="Throttle" data-scale="up">W</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">vehicle_brake</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="axis" data-original="S" data-key="Brake" data-scale="up">S</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">vehicle_interaction</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="F" data-key="VehicleEnterExit">F</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">vehicle_horn</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="H" data-key="VehicleHorn">H</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">vehicle_nitro</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="LeftShift" data-key="VehicleNitro">LeftShift</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">door_interaction</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="E" data-key="GenericInteract">E</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">vehicle_light</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="action" data-original="L" data-key="VehicleLight">L</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">vehicle_handbrake</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="axis" data-original="SpaceBar" data-key="Handbrake" data-scale="up">SpaceBar</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">helicopter_up</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="axis" data-original="LeftShift" data-key="MoveVertical" data-scale="up">LeftShift</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">helicopter_down</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="axis" data-original="LeftControl" data-key="MoveVertical" data-scale="down">LeftControl</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">helicopter_turn_right</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="axis" data-original="E" data-key="MoveTurn" data-scale="up">E</button>
+							</td>
+						</tr>
+						<tr>
+							<td><span class="translated">helicopter_turn_left</span></td>
+							<td>
+								<button type="button" class="btn btn-secondary controlSetting" data-type="axis" data-original="Q" data-key="MoveTurn" data-scale="down">Q</button>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+					<br><br>
+					<button type="submit" class="btn btn-success btn-lg"><span class="translated">save</span></button>
+					<button type="submit" class="btn btn-warning btn-lg"><span class="translated">reset</span></button>
+					</div>
+					</div>
+				</main>
+			</div>
+		</div>
+		
+		<div class="siteWrapperTopBottom" id="footer">
+			<div class="maincontent">
+				<main role="main" class="container-fluid px-0">
+				<div class="row" style="margin-left: 0px; margin-right: 0px;">
+					<div class="col-3">
+						<p id="versionInformation">
+						EARLY ACCESS<br>Copyright (C) 2019 Blue Mountains GmbH<br>Game Version
+						</p>
+					</div>
+					<div class="col-7">
+						<div id="serverNameIP" style="display: none;">
+							<span style="font-weight: bold;" class="translated">you_are_playing_on</span>
+							<br>
+							<span style="font-size: 1.65vh;">servername (IP: 0.0.0.0)</span>
+						</div>
+					</div>
+					<div class="col-2">
+						<p id="computerInformation" class="text-right">
+						<!--computerInformation-->
+						</p>
+					</div>
+				</div>
+				</main>
+			</div>
+		</div>
+	</div>
+	<script src="jquery-3.4.1.min.js"></script>
+	<script src="TableSort.js"></script>
+	<script>let lang = {};</script>
+	<script src="lang/en.js"></script>
+	<script src="lang/pt.js"></script>
+	<script src="lang/fr.js"></script>
+	<script src="lang/de.js"></script>
+	<script src="lang/ru.js"></script>
+	<script src="lang/zh_Hant.js"></script>
+	<script src="language.js"></script>
+    <script src="site.js"></script>
+    <script src="mbox.js"></script>
+    <script src="dropdown.js"></script>
+    <script src="dist/js/bootstrap.min.js"></script>
+    <script src="bbcode/xbbcode.js"></script>
+</body>
+</html>
